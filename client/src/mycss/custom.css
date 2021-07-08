@@ -1,0 +1,251 @@
+/* Global */
+.vheight-100 {
+  min-height: 100vh;
+}
+
+body {
+  padding-top: 70px;
+}
+
+.card-list-relative {
+  display   : inline-block;
+  position  : relative;
+  align-items: center !important;
+  width     : 100%;
+  cursor    : pointer;
+}
+
+.card-relative {
+  display   : inline-block;
+  position  : relative;
+  align-items: center !important;
+  width     : 100%;
+}
+
+.font-impact {
+  font: 18px Impact;
+}
+
+.font-arial {
+  font: 18px Arial;
+}
+
+.color-red {
+  color: red;
+}
+
+.color-green {
+  color: green;
+}
+
+.color-black {
+  color: black;
+}
+
+.color-white {
+  color: white;
+}
+
+.standard-text {
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+  position     : absolute;
+}
+
+.bottom-single-text {
+  max-height: 9%;
+  bottom    : 0%;
+  left      : 10%;
+  width     : 80%;
+}
+
+.bottom-single-text2 {
+  max-height: 12%;
+  bottom    : -2%;
+  left      : 10%;
+  width     : 80%;
+}
+
+.details-text {
+  font-style: italic;
+  text-align: center;
+  font-size : 18px;
+}
+
+.custom-previews {
+  max-height : 350px;
+  overflow-y : scroll;
+  align-items: center;
+  text-align : center;
+}
+
+/* Top right text */
+.top-right {
+  width        : 45%;
+  max-height   : 35%;
+  position     : absolute;
+  top          : 5%;
+  right        : 3%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Bottom right text */
+.bottom-right {
+  width    : 45%;
+  max-height   : 37%;
+  position     : absolute;
+  bottom       : 5%;
+  right        : 3%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Top left text */
+.top-left {
+  width    : 45%;
+  max-height   : 27%;
+  position     : absolute;
+  top          : 5%;
+  left         : 3%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Top center text
+.top-center {
+  max-width    : 25%;
+  max-height   : 25%;
+  position     : absolute;
+  top          : 80px;
+  left         : 37%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+} */
+
+.center-left {
+  width    : 45%;
+  max-height   : 27%;
+  position     : absolute;
+  top          : 37%;
+  left         : 3%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Centered text
+.center-center {
+  max-width    : 25%;
+  max-height   : 25%;
+  position     : absolute;
+  top          : 45%;
+  left         : 37%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+} */
+
+/* Cente-right text
+.center-right {
+  max-width    : 25%;
+  max-height   : 25%;
+  position     : absolute;
+  top          : 45%;
+  right        : 16px;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+} */
+
+/* Bottom left text */
+.bottom-left {
+  width    : 45%;
+  max-height   : 27%;
+  position     : absolute;
+  top       : 69%;
+  left         : 3%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Bottom center text
+.bottom-center {
+  max-width    : 25%;
+  max-height   : 25%;
+  position     : absolute;
+  bottom       : -10px;
+  left         : 37%;
+  word-wrap    : break-word !important;
+  overflow     : hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word !important;
+} */
+
+.below-nav {
+  padding-top: 5rem;
+}
+
+/* Filters and projects */
+.list-group-item {
+  background-color: transparent !important;
+}
+
+.list-group-item.active {
+  background-color: #28a745 !important;
+  border-color    : #28a745 !important;
+}
+
+.list-group-item-action:hover {
+  background-color: #9becae !important;
+}
+
+/* Add task button */
+.fixed-right-bottom {
+  position     : fixed;
+  right        : 0;
+  bottom       : 0;
+  z-index      : 1030;
+  margin       : 0 1.5rem 1.5rem 0;
+  border-radius: 50% !important;
+}
+
+/*Remove borders from aside items and style them as "flush".
+   It can't be done with variant="flush" on ListGroup since its children
+   are not ListGroup.Item, they are Link*/
+.flushStyle {
+  border-left : none !important;
+  border-right: none !important;
+  border-top  : none !important;
+}
+
+/*Style the logout button*/
+.logout {
+  color          : #FFFFFF !important;
+  text-decoration: none !important;
+}
+
+/*Center the login form*/
+.center {
+  margin       : 0;
+  position     : absolute;
+  top          : 50%;
+  left         : 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform    : translate(-50%, -50%);
+}

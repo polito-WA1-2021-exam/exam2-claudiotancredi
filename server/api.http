@@ -1,0 +1,60 @@
+@server = http://localhost:3001
+
+### USERS
+
+### Correct login
+POST {{server}}/api/sessions
+Content-Type: application/json
+
+{"username": "claudiotancredi@polito.it", 
+"password": "eusebio"}
+
+### Wrong username/password for login
+POST {{server}}/api/sessions
+Content-Type: application/json
+
+{"username": "claudiotancredi@polito.it", 
+"password": "akkjfingf"}
+
+### Logout
+DELETE {{server}}/api/sessions/current
+
+### Check if the user is logged in or not
+GET {{server}}/api/sessions/current
+
+
+
+
+### STATIC CONTENT
+
+### Get a static resource (image)
+GET {{server}}/static/bike.png
+
+
+
+
+
+
+### MEMES
+
+DELETE {{server}}/api/memes/2
+
+
+###
+GET {{server}}/api/memes
+
+###
+GET {{server}}/api/memes/filter=public
+
+###
+POST {{server}}/api/memes
+Content-Type: application/json
+
+{
+	"title": "Test7",
+	"imageId": 1,
+    "sentences": "Prova&&&&&&&&&&",
+    "cssFontClass":"font-impact",
+    "cssColourClass":"color-white",
+    "prot": true
+}
