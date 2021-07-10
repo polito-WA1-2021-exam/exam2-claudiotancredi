@@ -123,7 +123,7 @@ app.get('/api/sessions/current', (req, res) => {
       res.status(200).json(req.user);
   }
   else
-      res.status(401).json({ error: 'Unauthenticated user!' });;
+      res.status(401).json({ error: 'Unauthenticated user!' });
 });
 
 /*** MEMES APIs ***/
@@ -151,7 +151,9 @@ app.post('/api/memes', isLoggedIn, async (req, res) => {
       body('title').isString().withMessage("Must be a string").bail().isLength({ min: 5 }).withMessage("Must be at least 5 chars long").run(req),
       //Important must be a boolean
       body('imageId').isInt().withMessage("Must be an integer").run(req),
-      body('sentences').isString().withMessage("Must be a string").run(req),
+      body('sentence1').isString().withMessage("Must be a string").run(req),
+      body('sentence2').isString().withMessage("Must be a string").run(req),
+      body('sentence3').isString().withMessage("Must be a string").run(req),
       body('cssFontClass').isString().withMessage("Must be a string").run(req),
       body('cssColourClass').isString().withMessage("Must be a string").run(req),
       body('prot').isBoolean().withMessage("Must be a boolean (true/false)").run(req)

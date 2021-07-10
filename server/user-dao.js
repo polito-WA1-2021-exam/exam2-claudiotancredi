@@ -1,5 +1,5 @@
 'use strict';
-/* Data Access Object (DAO) module for accessing users */
+/* Data Access Object (DAO) module for accessing users (which in this case are creators)*/
 
 const db = require('./db');
 const bcrypt = require('bcrypt');

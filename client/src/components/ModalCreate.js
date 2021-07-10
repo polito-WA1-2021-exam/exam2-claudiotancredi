@@ -1,25 +1,43 @@
 //import react-bootstrap components
 import { Button, Modal, Card, Container, Row, Col, Form } from 'react-bootstrap';
 //imports needed to use state
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import API from '../API';
 
-const addMeme = (newMeme, setDirty) => {
-    API.addNewMeme(newMeme).then(()=>setDirty?setDirty(true):null);
+const addMeme = (newMemeForServer, newMemeForList, setDirty, setMemesList) => {
+    setMemesList((oldList) => oldList.concat(newMemeForList));
+    API.addNewMeme(newMemeForServer).then(() => setDirty(true));
 }
 
 function SentenceField(props) {
     return (<Form.Row>
         <Form.Group as={Col} xs="12" controlId={"sentence" + props.id}>
             <Form.Label>Sentence {props.id}</Form.Label>
-            <Form.Control type="text" placeholder="Write here..." value={props.sentence}
-                onChange={(event) => props.setSentence(event.target.value)} />
+            <Form.Control className="text-area-resize" placeholder="Write here..." as="textarea" rows={2} value={props.sentence}
+                onChange={(event) => props.setSentence(event.target.value)} isInvalid={props.invalidSentencesFlag}/>
+            {props.emptySentencesErrorMessage}
         </Form.Group>
     </Form.Row>)
 }
 
 function MemeForm(props) {
     let tempId = 1;
+    //Flag used to set isInvalid on description Form.Control so that special style is applied
+    let invalidTitleFlag = ((props.validated === true && props.emptyTitle === true) || (props.validated === true && props.emptyTitle === false && props.longTitle === false));
+    
+    //Form.Control.Feedback error messages for description. They're shown only when conditions are met
+    let emptyTitleErrorMessage = (props.validated === true && props.emptyTitle === true) ?
+        (<Form.Control.Feedback type="invalid">Please provide a title for the Meme.</Form.Control.Feedback>) : "";
+    let shortTitleErrorMessage = (props.validated === true && props.emptyTitle === false && props.longTitle === false) ?
+        (<Form.Control.Feedback type="invalid">The title must be at least 5 characters long.</Form.Control.Feedback>) : "";
+
+    //Flag used to set isInvalid on description Form.Control so that special style is applied
+    let invalidSentencesFlag = ((props.validated === true && props.oneSentenceSetted === false));
+
+    //Form.Control.Feedback error messages for description. They're shown only when conditions are met
+    let emptySentencesErrorMessage = (props.validated === true && props.oneSentenceSetted === false) ?
+        (<Form.Control.Feedback type="invalid">At least one sentence is required.</Form.Control.Feedback>) : "";
+    
     return (<>
         <Form>
             <p className="details-text">
@@ -29,34 +47,36 @@ function MemeForm(props) {
                 <Form.Group as={Col} xs="12" controlId="titleForm">
                     <Form.Label>Title</Form.Label>
                     <Form.Control type="text" placeholder="Write here..." value={props.title}
-                        onChange={(event) => props.setTitle(event.target.value)} />
+                        onChange={(event) => props.setTitle(event.target.value)} isInvalid={invalidTitleFlag} />
+                        {emptyTitleErrorMessage}
+                        {shortTitleErrorMessage}
                 </Form.Group>
             </Form.Row>
-            {props.image.cssSentencesPosition[0] !== "" && <SentenceField id={tempId++} sentence={props.sentence1} setSentence={props.setSentence1} />}
-            {props.image.cssSentencesPosition[1] !== "" && <SentenceField id={tempId++} sentence={props.sentence2} setSentence={props.setSentence2} />}
-            {props.image.cssSentencesPosition[2] !== "" && <SentenceField id={tempId++} sentence={props.sentence3} setSentence={props.setSentence3} />}
+            {props.image.cssSentencesPosition[0] !== "" && <SentenceField id={tempId++} sentence={props.sentence1} setSentence={props.setSentence1} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage}/>}
+            {props.image.cssSentencesPosition[1] !== "" && <SentenceField id={tempId++} sentence={props.sentence2} setSentence={props.setSentence2} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage}/>}
+            {props.image.cssSentencesPosition[2] !== "" && <SentenceField id={tempId++} sentence={props.sentence3} setSentence={props.setSentence3} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage}/>}
             <Form.Row>
-                <Form.Group as={Col} xs="6" controlId="fontForm">
+                <Form.Group as={Col} xs="5" controlId="fontForm">
                     <Form.Label>Set font</Form.Label>
-                    <Form.Control as="select" value={props.font} onChange={(event) => props.setFont(event.target.value)}>
-                        <option >Impact</option>
-                        <option>Arial</option>
+                    <Form.Control className={"font-" + props.font.toLowerCase()} as="select" value={props.font} onChange={(event) => props.setFont(event.target.value)}>
+                        <option className="font-impact">Impact</option>
+                        <option className="font-arial">Arial</option>
                     </Form.Control>
                 </Form.Group>
-                <Form.Group as={Col} xs="6" controlId="colorForm">
+                <Form.Group as={Col} xs="7" controlId="colorForm">
                     <Form.Label>Set color</Form.Label>
-                    <Form.Control as="select" value={props.color} onChange={(event) => props.setColor(event.target.value)}>
-                        <option >White</option>
-                        <option>Black</option>
-                        <option>Green</option>
-                        <option>Red</option>
-                    </Form.Control>
+                    <Container>
+                        <Button className="color-button color-button-black" active={props.color === "Black"} onClick={() => props.setColor("Black")}></Button>
+                        <Button className="color-button color-button-white" active={props.color === "White"} onClick={() => props.setColor("White")}></Button>
+                        <Button className="color-button color-button-red" active={props.color === "Red"} onClick={() => props.setColor("Red")}></Button>
+                        <Button className="color-button color-button-green" active={props.color === "Green"} onClick={() => props.setColor("Green")}></Button>
+                    </Container>
                 </Form.Group>
             </Form.Row>
             <Form.Row>
                 <Form.Group as={Col} xs="12" controlId="visibilityForm">
                     <Form.Label>Set visibility status</Form.Label>
-                    <Form.Control as="select" value={props.visibilityStatus} onChange={(event) => props.setVisibilityStatus(event.target.value)} disabled={props.visibilityConstraint===true}>
+                    <Form.Control as="select" value={props.visibilityStatus} onChange={(event) => props.setVisibilityStatus(event.target.value)} disabled={props.visibilityConstraint === true}>
                         <option >Protected</option>
                         <option>Public</option>
                     </Form.Control>
@@ -68,22 +88,29 @@ function MemeForm(props) {
 
 function ModalCreate(props) {
     const modalTitle = (props.meme.title === "" ? "New meme" : "Copy meme");
-    let tempId = 0;
     let tempIdButton = 0;
 
     const [currentImage, setCurrentImage] = useState(props.images.filter(element => element.url === props.meme.url)[0]);
     const [title, setTitle] = useState(props.meme.title);
     const [font, setFont] = useState(props.meme.font);
     const [color, setColor] = useState(props.meme.color);
-    const [sentence1, setSentence1] = useState(props.meme.sentences[0]);
-    const [sentence2, setSentence2] = useState(props.meme.sentences[1]);
-    const [sentence3, setSentence3] = useState(props.meme.sentences[2]);
+    const [sentence1, setSentence1] = useState(props.meme.sentence1);
+    const [sentence2, setSentence2] = useState(props.meme.sentence2);
+    const [sentence3, setSentence3] = useState(props.meme.sentence3);
     const [visibilityStatus, setVisibilityStatus] = useState(props.meme.prot);
     const [visibilityConstraint, setVisibilityConstraint] = useState(props.meme.visibilityConstraint);
 
+    const [emptyTitle, setEmptyTitle] = useState(true);
+    const [longTitle, setLongTitle] = useState(false);
+    const [oneSentenceSetted, setOneSentenceSetted] = useState(false);
+    //validated : becomes true after the first submit so that error messages are shown
+    const [validated, setValidated] = useState(false);
+
     const addMemeThenCloseModal = () => {
-        const newMeme = {title:title, imageId:currentImage.id, sentences:sentence1+"&&&&&"+sentence2+"&&&&&"+sentence3, cssFontClass:"font-" + font.toLowerCase(), cssColourClass:"color-"+color.toLowerCase(), prot:visibilityStatus==="Protected"};
-        addMeme(newMeme, props.setDirty);
+        const newMemeForServer = { title: title, imageId: currentImage.id, sentence1: sentence1, sentence2: sentence2, sentence3: sentence3, cssFontClass: "font-" + font.toLowerCase(), cssColourClass: "color-" + color.toLowerCase(), prot: visibilityStatus === "Protected" };
+        const newMemeForList = new props.constr(`meme${props.tempMemeId}`, title, currentImage.url, sentence1, sentence2, sentence3, currentImage.cssSentencesPosition, "font-" + font.toLowerCase(), "color-" + color.toLowerCase(), visibilityStatus === "Protected", props.username, props.userId, true);
+        props.setTempMemeId((id)=>id+1);
+        addMeme(newMemeForServer, newMemeForList, props.setDirty, props.setMemesList);
         props.setModal(false);
     }
 
@@ -91,61 +118,53 @@ function ModalCreate(props) {
         event.preventDefault();
         //Check if the form is valid, if so add/edit the task and close the modal
         //First case: description long enough, both date and time set, deadline is set
-        if (title.length >= 5 && (sentence1!=="" || sentence2!=="" || sentence3!=="")) {
+        if (title.length >= 5 && (sentence1 !== "" || sentence2 !== "" || sentence3 !== "")) {
             addMemeThenCloseModal();
         }
         else {
-            //Form is not valid, but perform validation and update states accordingly so that messages are shown on the form
-            //Validation for description:
-            // if (taskDesc.length === 0) {
-            //     setEmptyDesc(true);
-            //     setLongDesc(false);
-            // }
-            // else if (taskDesc.length < 5 && taskDesc.length > 0) {
-            //     setEmptyDesc(false);
-            //     setLongDesc(false);
-            // }
-            // else {
-            //     setEmptyDesc(false);
-            //     setLongDesc(true);
-            // }
-            // //Validation for deadline:
-            // if (taskDeadline !== "" && taskTime === "") {
-            //     setEmptyDate(false);
-            //     setEmptyTime(true);
-            // }
-            // else if (taskDeadline === "" && taskTime !== "") {
-            //     setEmptyDate(true);
-            //     setEmptyTime(false);
-            // }
-            // else if (taskDeadline !== "" && taskTime !== "") {
-            //     setEmptyDate(false);
-            //     setEmptyTime(false);
-            // }
-            // else {
-            //     setEmptyDate(true);
-            //     setEmptyTime(true);
-            // }
-            // //From the first time that the user clicks on the Save button the validated state is set to true
-            // setValidated(true);
+            // Form is not valid, but perform validation and update states accordingly so that messages are shown on the form
+            // Validation for description:
+            if (title.length === 0) {
+                setEmptyTitle(true);
+                setLongTitle(false);
+            }
+            else if (title.length < 5 && title.length > 0) {
+                setEmptyTitle(false);
+                setLongTitle(false);
+            }
+            else {
+                setEmptyTitle(false);
+                setLongTitle(true);
+            }
+            if (sentence1==="" && sentence2==="" && sentence3===""){
+                setOneSentenceSetted(false);
+            }
+            else{
+                setOneSentenceSetted(true);
+            }
+            //From the first time that the user clicks on the Save button the validated state is set to true
+            setValidated(true);
         }
     };
 
     return (
-        <Modal show={true} onHide={() => props.setModal(false)} backdrop="static" keyboard={false} centered animation={false} size="lg">
+        <Modal show={true} onHide={() => {
+            props.setModal(false);
+            props.setLoading(true);
+            props.setDirty(true);
+        }} backdrop="static" keyboard={false} centered animation={false} size={props.meme.title===""?"xl":"lg"}>
             <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Container>
                     <Row className="align-items-center">
-                        {modalTitle === "New meme" && <Col xs={3}>
+                        {modalTitle === "New meme" && <Col xs={3} className="card-relative">
                             <Row>
                                 <p className="details-text">Choose a background image for the meme</p>
                             </Row>
                             <div className="custom-previews">
-                                {props.images.map((i) => (<Button key={tempIdButton++} width={145} height={145} variant="link outline-light" as="img" src={i.url} onClick={() => {
-                                    setCurrentImage(i);
+                                {props.images.map((i) => (<Button key={tempIdButton++} width={200} height={200} variant="link outline-light" as="img" src={i.url} onClick={() => {
                                     setTitle("");
                                     setFont("Impact");
                                     setColor("White");
@@ -153,11 +172,16 @@ function ModalCreate(props) {
                                     setSentence2("");
                                     setSentence3("");
                                     setVisibilityStatus("Protected");
+                                    setEmptyTitle(true);
+                                    setLongTitle(false);
+                                    setOneSentenceSetted(false);
+                                    setValidated(false);
+                                    setCurrentImage(i);
                                 }} />))}
                             </div>
                         </Col>
                         }
-                        <Col xs={6}>
+                        <Col>
                             <Row>
                                 <Col>
                                     <p className="details-text">
@@ -176,14 +200,20 @@ function ModalCreate(props) {
                                 </Container>
                             </Card>
                         </Col>
-                        <Col>
-                            <MemeForm visibilityConstraint={visibilityConstraint} image={currentImage} title={title} setTitle={setTitle} font={font} setFont={setFont} color={color} setColor={setColor} sentence1={sentence1} setSentence1={setSentence1} sentence2={sentence2} setSentence2={setSentence2} sentence3={sentence3} setSentence3={setSentence3} visibilityStatus={visibilityStatus} setVisibilityStatus={setVisibilityStatus} />
+                        <Col xs={props.meme.title===""?3:5}>
+                            <MemeForm visibilityConstraint={visibilityConstraint} image={currentImage} title={title} setTitle={setTitle} font={font} setFont={setFont} color={color} setColor={setColor} sentence1={sentence1} setSentence1={setSentence1} 
+                            sentence2={sentence2} setSentence2={setSentence2} sentence3={sentence3} setSentence3={setSentence3} visibilityStatus={visibilityStatus} setVisibilityStatus={setVisibilityStatus} 
+                            validated={validated} emptyTitle={emptyTitle} longTitle={longTitle} oneSentenceSetted={oneSentenceSetted}/>
                         </Col>
                     </Row>
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={() => props.setModal(false)}>
+                <Button variant="secondary" onClick={() => {
+                    props.setModal(false);
+                    props.setLoading(true);
+                    props.setDirty(true);
+                }}>
                     Close
                 </Button>
                 <Button variant="primary" onClick={handleSubmit}>

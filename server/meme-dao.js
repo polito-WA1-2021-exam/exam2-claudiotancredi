@@ -5,7 +5,7 @@ const db = require('./db');
 
 exports.retrieveAll = () => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT memes.id, memes.title, images.url, memes.sentences, images.cssSentencesPosition, memes.cssFontClass, memes.cssColourClass, memes.protected, users.name FROM memes, images, users WHERE memes.bgImage=images.id AND memes.user=users.id";
+        const sql = "SELECT memes.id, memes.title, images.url, memes.sentence1, memes.sentence2, memes.sentence3, images.cssSentencesPosition, memes.cssFontClass, memes.cssColourClass, memes.protected, users.name, memes.user FROM memes, images, users WHERE memes.bgImage=images.id AND memes.user=users.id";
         db.all(sql, [], (err, rows) => {
             if (err)
                 reject(err);
@@ -17,7 +17,7 @@ exports.retrieveAll = () => {
 
 exports.retrieveOnlyPublic = () => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT memes.id, memes.title, images.url, memes.sentences, images.cssSentencesPosition, memes.cssFontClass, memes.cssColourClass, memes.protected, users.name FROM memes, images, users WHERE memes.protected=0 AND memes.bgImage=images.id AND memes.user=users.id";
+        const sql = "SELECT memes.id, memes.title, images.url, memes.sentence1, memes.sentence2, memes.sentence3, images.cssSentencesPosition, memes.cssFontClass, memes.cssColourClass, memes.protected, users.name, memes.user FROM memes, images, users WHERE memes.protected=0 AND memes.bgImage=images.id AND memes.user=users.id";
         db.all(sql, [], (err, rows) => {
             if (err)
                 reject(err);
@@ -48,8 +48,8 @@ exports.deleteByID = (id, user) => {
 
 exports.insertMeme = (meme, user) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO memes (title, bgImage, sentences, cssFontClass, cssColourClass, protected, user) VALUES(?, ?, ?, ?, ?, ?, ?)';
-        db.run(sql, [meme.title, meme.imageId, meme.sentences, meme.cssFontClass, meme.cssColourClass, meme.prot, user], function (err) {
+        const sql = 'INSERT INTO memes (title, bgImage, sentence1, sentence2, sentence3, cssFontClass, cssColourClass, protected, user) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.run(sql, [meme.title, meme.imageId, meme.sentence1, meme.sentence2, meme.sentence3, meme.cssFontClass, meme.cssColourClass, meme.prot, user], function (err) {
             if (err)
                 reject(err);
             else

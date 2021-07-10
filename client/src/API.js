@@ -16,9 +16,10 @@ async function loadAllMemes() {
     }
     const memes = await response.json();
     return memes.map(m => {
-        m = ({ ...m, sentences: m.sentences.split('&&&&&'), url: url + m.url, prot: (Boolean(m.protected)) , creatorName: m.name, cssSentencesPosition: m.cssSentencesPosition.split(",")});
+        m = ({ ...m, url: url + m.url, prot: (Boolean(m.protected)) , creatorName: m.name, creatorId: m.user, cssSentencesPosition: m.cssSentencesPosition.split(",")});
         delete m.protected;
         delete m.name;
+        delete m.user
         return m;
     });
 }
@@ -30,7 +31,9 @@ async function addNewMeme(newMeme) {
         body: JSON.stringify({
             title: newMeme.title,
             imageId: newMeme.imageId,
-            sentences: newMeme.sentences,
+            sentence1: newMeme.sentence1,
+            sentence2: newMeme.sentence2,
+            sentence3: newMeme.sentence3,
             cssFontClass: newMeme.cssFontClass,
             cssColourClass: newMeme.cssColourClass,
             prot: newMeme.prot
@@ -58,9 +61,10 @@ async function loadPublicMemes() {
     }
     const pubmemes = await response.json();
     return pubmemes.map(m => {
-        m = ({ ...m, sentences: m.sentences.split('&&&&&'), url: url + m.url, prot: (Boolean(m.protected)) , creatorName: m.name, cssSentencesPosition: m.cssSentencesPosition.split(",")});
+        m = ({ ...m, url: url + m.url, prot: (Boolean(m.protected)) , creatorName: m.name, creatorId: m.user, cssSentencesPosition: m.cssSentencesPosition.split(",")});
         delete m.protected;
         delete m.name;
+        delete m.user;
         return m;
     });
 }

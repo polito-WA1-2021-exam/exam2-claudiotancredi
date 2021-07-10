@@ -53,7 +53,9 @@ Content-Type: application/json
 {
 	"title": "Test7",
 	"imageId": 1,
-    "sentences": "Prova&&&&&&&&&&",
+    "sentence1": "Prova",
+    "sentence2": "",
+    "sentence3": "",
     "cssFontClass":"font-impact",
     "cssColourClass":"color-white",
     "prot": true

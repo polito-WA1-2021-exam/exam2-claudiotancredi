@@ -18,22 +18,25 @@ import API from './API';
 //import images
 import Meme from "./Meme";
 import Image from "./Image";
+import HashLoader from "react-spinners/HashLoader";
 
 function App() {
   //Define a state to manage login. undefined -> request not satisfied yet, false -> user not logged in, true -> user logged in
   const [loggedIn, setLoggedIn] = useState(undefined);
   //Define a state to manage user information (its name, which will be displayed on the navbar)
   const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState(undefined);
   //Define a state for a message to show ("incorrect username and/or password")
   const [message, setMessage] = useState('');
   const [goToLogin, setGoToLogin] = useState(false);
   const [memeList, setMemeList] = useState([]);
   const [imageList, setImageList] = useState([]);
   const [dirty, setDirty] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = () => {
-      API.getUserInfo().then((user) => { setLoggedIn(true); setUserName(user.name); }).catch((err) => { console.error(err.error); setLoggedIn(false) }).finally(() => setDirty(true));
+      API.getUserInfo().then((user) => { setLoggedIn(true); setUserName(user.name); setUserId(user.id)}).catch((err) => { console.error(err.error); setLoggedIn(false) }).finally(() => setDirty(true));
     }
     checkAuth();
   }, []);
@@ -45,39 +48,39 @@ function App() {
     //Variable used to avoid slow responses errors/fast filter changes caused by the user
     let isMounted = true;
     //Map each filter to the corresponding API function. This is useful to avoid code repetition
-    if (dirty && !loggedIn) {
+    if (dirty && loggedIn===false) {
       //Call the proper API function
       API.loadPublicMemes().then(newMemesList => {
         if (isMounted) {
-          newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentences, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName));
+          newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentence1, m.sentence2, m.sentence3, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName, m.creatorId));
           setMemeList(newMemesList);
         }
       }).catch((err) => { if (isMounted) { setMemeList([]); } }).finally(() => {
         if (isMounted) {
+          setLoading(false);
           setDirty(false);
         }
       })
     }
-    else if (dirty && loggedIn) {
+    else if (dirty && loggedIn===true) {
       API.loadImages().then(newImageList => {
         if (isMounted) {
-          console.log(newImageList)
           newImageList = newImageList.map(i => new Image(i.id, i.url, i.cssSentencesPosition));
           setImageList(newImageList);
         }
       }).catch((err) => { if (isMounted) { setImageList([]); } })
       API.loadAllMemes().then(newMemesList => {
         if (isMounted) {
-          console.log(newMemesList)
-          newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentences, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName));
+          newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentence1, m.sentence2, m.sentence3, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName, m.creatorId));
           setMemeList(newMemesList);
         }
       }).catch((err) => { if (isMounted) { setMemeList([]); } }).finally(() => {
         if (isMounted) {
+          setLoading(false);
           setDirty(false);
         }
       })
-      
+
       //DOVREBBE ESSERE UN PO' SISTEMATO
     }
     //cleanup function
@@ -90,11 +93,13 @@ function App() {
     try {
       const user = await API.logIn(credentials);
       setUserName(user.name);
+      setUserId(user.id)
       setLoggedIn(true);
       setMessage('');
     } catch (err) {
       setMessage({ msg: err, type: 'danger' });
     } finally {
+      setLoading(true);
       setDirty(true);
     }
   }
@@ -103,29 +108,40 @@ function App() {
     await API.logOut();
     setLoggedIn(false);
     // clean up everything
-    //setTaskList([]); TO CHANGE
+    setMemeList([]);
     setUserName('');
+    setUserId(undefined);
     setMessage('');
     setGoToLogin(false);
+    setLoading(true);
     setDirty(true);
   }
+
+  const override = `
+  margin       : 0;
+  position     : absolute;
+  top          : 50%;
+  left         : 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform    : translate(-50%, -50%);
+`;
 
   return (
     <Router>
       <Container fluid>
-        {loggedIn && (<>      <NavBar username={userName} loggedIn={loggedIn} doLogOut={doLogOut} />
-        </>)}
+        {loggedIn === true ? (<NavBar username={userName} loggedIn={loggedIn} doLogOut={doLogOut} />) : <></>}
 
-        {(!loggedIn) && (<>      <NavBar username={userName} loggedIn={loggedIn} setGoToLogin={setGoToLogin} /></>)}
+        {loggedIn === false ? (<NavBar username={userName} loggedIn={loggedIn} setGoToLogin={setGoToLogin} />) : <></>}
         {goToLogin && <Redirect to="/login" />}
         <Switch>
           <Route exact path="/login" render={() =>
-            <>{loggedIn && <Redirect to="/" />}
-              {(!loggedIn) && <LoginForm login={doLogIn} message={message} setMessage={setMessage} />}
+            <>{loggedIn === true ? <Redirect to="/" /> : <></>}
+              {loggedIn === false ? <LoginForm setLoading={setLoading} login={doLogIn} message={message} setMessage={setMessage} setGoToLogin={setGoToLogin} setDirty={setDirty} /> : <></>}
             </>} />
           <Route exact path="/" render={() =>
             <>
-              <MainContent loggedIn={loggedIn} memes={memeList} constr={Meme} setMemesList={setMemeList} setDirty={setDirty} username={userName} images={imageList}/>
+              <HashLoader size={150} css={override} loading={loading} color={"#007bff"} />
+              {loading === false ? <MainContent userId={userId} loggedIn={loggedIn} memes={memeList} constr={Meme} setMemesList={setMemeList} setDirty={setDirty} username={userName} images={imageList} setLoading={setLoading} /> : <></>}
             </>
           } />
         </Switch>

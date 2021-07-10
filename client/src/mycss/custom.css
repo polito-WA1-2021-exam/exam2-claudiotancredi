@@ -75,7 +75,7 @@ body {
 }
 
 .custom-previews {
-  max-height : 350px;
+  max-height : 370px;
   overflow-y : scroll;
   align-items: center;
   text-align : center;
@@ -85,39 +85,24 @@ body {
 .top-right {
   width        : 45%;
   max-height   : 35%;
-  position     : absolute;
   top          : 5%;
   right        : 3%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
 }
 
 /* Bottom right text */
 .bottom-right {
   width    : 45%;
   max-height   : 37%;
-  position     : absolute;
   bottom       : 5%;
   right        : 3%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
 }
 
 /* Top left text */
 .top-left {
-  width    : 45%;
+  width    : 42%;
   max-height   : 27%;
-  position     : absolute;
   top          : 5%;
-  left         : 3%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
+  left         : 5%;
 }
 
 /* Top center text
@@ -134,15 +119,10 @@ body {
 } */
 
 .center-left {
-  width    : 45%;
+  width    : 42%;
   max-height   : 27%;
-  position     : absolute;
   top          : 37%;
-  left         : 3%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
+  left         : 5%;
 }
 
 /* Centered text
@@ -173,15 +153,38 @@ body {
 
 /* Bottom left text */
 .bottom-left {
-  width    : 45%;
+  width    : 42%;
   max-height   : 27%;
-  position     : absolute;
   top       : 69%;
-  left         : 3%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
+  left         : 5%;
+}
+
+.color-button{
+  position:relative;
+  border-radius: 30% !important;
+  height: 28px;
+  width: 27px;
+  border-color:black !important;
+}
+
+.color-button-black{
+  background: black !important;
+}
+
+.color-button-red{
+  background: red !important;
+}
+
+.color-button-green{
+  background: green !important;
+}
+
+.color-button-white{
+  background: white !important;
+}
+
+.text-area-resize{
+  resize:none;
 }
 
 /* Bottom center text

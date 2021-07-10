@@ -1,5 +1,7 @@
-import { Form, Button, Alert, Col, Row } from 'react-bootstrap';
+import { Form, Button, Alert, Col, Row, Container } from 'react-bootstrap';
 import { useState } from 'react';
+//import react-router-dom components
+import { Redirect } from 'react-router-dom';
 
 function LoginForm(props) {
     //Define a state for the username
@@ -8,6 +10,7 @@ function LoginForm(props) {
     const [password, setPassword] = useState('');
     //Define a state for the error message to show in case there are problems with the fields
     const [errorMessage, setErrorMessage] = useState('');
+    const [goToHomePage, setGoToHomePage] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -28,19 +31,24 @@ function LoginForm(props) {
 
     return (
         <>
+            {goToHomePage && (<Redirect to="/" />)}
             <div className="center">
-                <Row className="justify-content-center"><h1>Meme Generator</h1></Row>
+                <Row className="text-center"><h1>Meme Generator</h1></Row>
                 <Row className="justify-content-center">
                     <Form>
                         <Row>
                             <Form.Group as={Col} xs="12" controlId='username'>
-                                <Form.Label>E-mail</Form.Label>
+                                <Container className="text-center">
+                                    <Form.Label>E-mail</Form.Label>
+                                </Container>
                                 <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
                             </Form.Group>
                         </Row>
                         <Row>
                             <Form.Group as={Col} xs="12" controlId='password'>
-                                <Form.Label>Password</Form.Label>
+                                <Container className="text-center">
+                                    <Form.Label>Password</Form.Label>
+                                </Container>
                                 <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
                             </Form.Group>
                         </Row>
@@ -51,8 +59,14 @@ function LoginForm(props) {
                             {props.message &&
                                 <Alert variant={props.message.type} as={Col} xs="12" onClose={() => props.setMessage('')} dismissible>{props.message.msg}</Alert>}
                         </Row>
-                        <Row className="justify-content-center">
-                            <Button variant="primary" as={Col} xs="4" onClick={handleSubmit}>Login</Button>
+                        <Row className="justify-content-between">
+                            <Button variant="secondary" as={Col} xs="5" onClick={()=>{
+                                props.setGoToLogin(false);
+                                setGoToHomePage(true);
+                                props.setLoading(true);
+                                props.setDirty(true);
+                            }}>Go back</Button>
+                            <Button variant="primary" as={Col} xs="5" onClick={handleSubmit}>Login</Button>
                         </Row>
                     </Form>
                 </Row>
