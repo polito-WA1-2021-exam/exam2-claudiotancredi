@@ -1,4 +1,0 @@
-Client:
-    - In index.html, riga 12, posso cambiare l'icona della scheda del browser
-    - Posso eliminare App.css se non serve più
-    - Posso eliminare logo.svg in src se non serve 

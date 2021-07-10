@@ -121,7 +121,7 @@ function MainContent(props) {
                 sentence3: "",
                 cssSentencesPosition: ["bottom-single-text", "", ""],
                 font: "Impact",
-                color: "White",
+                color: "Black",
                 prot: "Protected",
                 creatorName: props.username
             });

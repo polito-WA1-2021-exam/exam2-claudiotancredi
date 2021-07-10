@@ -1,8 +1,9 @@
 //import react-bootstrap components
-import { Button, Modal, Card, Container, Row, Col, Form } from 'react-bootstrap';
+import { Button, Modal, Card, Container, Row, Col, Form, Spinner } from 'react-bootstrap';
 //imports needed to use state
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import API from '../API';
+import Image from '../Image';
 
 const addMeme = (newMemeForServer, newMemeForList, setDirty, setMemesList) => {
     setMemesList((oldList) => oldList.concat(newMemeForList));
@@ -14,7 +15,7 @@ function SentenceField(props) {
         <Form.Group as={Col} xs="12" controlId={"sentence" + props.id}>
             <Form.Label>Sentence {props.id}</Form.Label>
             <Form.Control className="text-area-resize" placeholder="Write here..." as="textarea" rows={2} value={props.sentence}
-                onChange={(event) => props.setSentence(event.target.value)} isInvalid={props.invalidSentencesFlag}/>
+                onChange={(event) => props.setSentence(event.target.value)} isInvalid={props.invalidSentencesFlag} />
             {props.emptySentencesErrorMessage}
         </Form.Group>
     </Form.Row>)
@@ -24,7 +25,7 @@ function MemeForm(props) {
     let tempId = 1;
     //Flag used to set isInvalid on description Form.Control so that special style is applied
     let invalidTitleFlag = ((props.validated === true && props.emptyTitle === true) || (props.validated === true && props.emptyTitle === false && props.longTitle === false));
-    
+
     //Form.Control.Feedback error messages for description. They're shown only when conditions are met
     let emptyTitleErrorMessage = (props.validated === true && props.emptyTitle === true) ?
         (<Form.Control.Feedback type="invalid">Please provide a title for the Meme.</Form.Control.Feedback>) : "";
@@ -37,7 +38,7 @@ function MemeForm(props) {
     //Form.Control.Feedback error messages for description. They're shown only when conditions are met
     let emptySentencesErrorMessage = (props.validated === true && props.oneSentenceSetted === false) ?
         (<Form.Control.Feedback type="invalid">At least one sentence is required.</Form.Control.Feedback>) : "";
-    
+
     return (<>
         <Form>
             <p className="details-text">
@@ -48,13 +49,15 @@ function MemeForm(props) {
                     <Form.Label>Title</Form.Label>
                     <Form.Control type="text" placeholder="Write here..." value={props.title}
                         onChange={(event) => props.setTitle(event.target.value)} isInvalid={invalidTitleFlag} />
-                        {emptyTitleErrorMessage}
-                        {shortTitleErrorMessage}
+                    {emptyTitleErrorMessage}
+                    {shortTitleErrorMessage}
                 </Form.Group>
             </Form.Row>
-            {props.image.cssSentencesPosition[0] !== "" && <SentenceField id={tempId++} sentence={props.sentence1} setSentence={props.setSentence1} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage}/>}
-            {props.image.cssSentencesPosition[1] !== "" && <SentenceField id={tempId++} sentence={props.sentence2} setSentence={props.setSentence2} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage}/>}
-            {props.image.cssSentencesPosition[2] !== "" && <SentenceField id={tempId++} sentence={props.sentence3} setSentence={props.setSentence3} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage}/>}
+            {props.loadingImages ? <div className="text-center"><Spinner animation="border" variant="primary" /> </div> : (<>
+                {props.image.cssSentencesPosition[0] !== "" && <SentenceField id={tempId++} sentence={props.sentence1} setSentence={props.setSentence1} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage} />}
+                {props.image.cssSentencesPosition[1] !== "" && <SentenceField id={tempId++} sentence={props.sentence2} setSentence={props.setSentence2} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage} />}
+                {props.image.cssSentencesPosition[2] !== "" && <SentenceField id={tempId++} sentence={props.sentence3} setSentence={props.setSentence3} invalidSentencesFlag={invalidSentencesFlag} emptySentencesErrorMessage={emptySentencesErrorMessage} />}
+            </>)}
             <Form.Row>
                 <Form.Group as={Col} xs="5" controlId="fontForm">
                     <Form.Label>Set font</Form.Label>
@@ -90,7 +93,7 @@ function ModalCreate(props) {
     const modalTitle = (props.meme.title === "" ? "New meme" : "Copy meme");
     let tempIdButton = 0;
 
-    const [currentImage, setCurrentImage] = useState(props.images.filter(element => element.url === props.meme.url)[0]);
+    const [currentImage, setCurrentImage] = useState(undefined);
     const [title, setTitle] = useState(props.meme.title);
     const [font, setFont] = useState(props.meme.font);
     const [color, setColor] = useState(props.meme.color);
@@ -98,18 +101,34 @@ function ModalCreate(props) {
     const [sentence2, setSentence2] = useState(props.meme.sentence2);
     const [sentence3, setSentence3] = useState(props.meme.sentence3);
     const [visibilityStatus, setVisibilityStatus] = useState(props.meme.prot);
-    const [visibilityConstraint, setVisibilityConstraint] = useState(props.meme.visibilityConstraint);
 
     const [emptyTitle, setEmptyTitle] = useState(true);
     const [longTitle, setLongTitle] = useState(false);
     const [oneSentenceSetted, setOneSentenceSetted] = useState(false);
     //validated : becomes true after the first submit so that error messages are shown
     const [validated, setValidated] = useState(false);
+    const [imageList, setImageList] = useState([]);
+    const [loadingImages, setLoadingImages] = useState(true);
+
+    const memeUrl=props.meme.url;
+
+    useEffect(() => {
+        const getImages = () => {
+            API.loadImages().then(newImageList => {
+                newImageList = newImageList.map(i => new Image(i.id, i.url, i.cssSentencesPosition));
+                setImageList(newImageList);
+                setCurrentImage(newImageList.filter(element => element.url === memeUrl)[0]);
+            }).catch((err) => { setImageList([]); }).finally(() => {
+                setLoadingImages(false);
+            })
+        }
+        getImages();
+    }, [memeUrl]);
 
     const addMemeThenCloseModal = () => {
         const newMemeForServer = { title: title, imageId: currentImage.id, sentence1: sentence1, sentence2: sentence2, sentence3: sentence3, cssFontClass: "font-" + font.toLowerCase(), cssColourClass: "color-" + color.toLowerCase(), prot: visibilityStatus === "Protected" };
         const newMemeForList = new props.constr(`meme${props.tempMemeId}`, title, currentImage.url, sentence1, sentence2, sentence3, currentImage.cssSentencesPosition, "font-" + font.toLowerCase(), "color-" + color.toLowerCase(), visibilityStatus === "Protected", props.username, props.userId, true);
-        props.setTempMemeId((id)=>id+1);
+        props.setTempMemeId((id) => id + 1);
         addMeme(newMemeForServer, newMemeForList, props.setDirty, props.setMemesList);
         props.setModal(false);
     }
@@ -136,10 +155,10 @@ function ModalCreate(props) {
                 setEmptyTitle(false);
                 setLongTitle(true);
             }
-            if (sentence1==="" && sentence2==="" && sentence3===""){
+            if (sentence1 === "" && sentence2 === "" && sentence3 === "") {
                 setOneSentenceSetted(false);
             }
-            else{
+            else {
                 setOneSentenceSetted(true);
             }
             //From the first time that the user clicks on the Save button the validated state is set to true
@@ -152,7 +171,7 @@ function ModalCreate(props) {
             props.setModal(false);
             props.setLoading(true);
             props.setDirty(true);
-        }} backdrop="static" keyboard={false} centered animation={false} size={props.meme.title===""?"xl":"lg"}>
+        }} backdrop="static" keyboard={false} centered animation={false} size={props.meme.title === "" ? "xl" : "lg"}>
             <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
             </Modal.Header>
@@ -163,11 +182,11 @@ function ModalCreate(props) {
                             <Row>
                                 <p className="details-text">Choose a background image for the meme</p>
                             </Row>
-                            <div className="custom-previews">
-                                {props.images.map((i) => (<Button key={tempIdButton++} width={200} height={200} variant="link outline-light" as="img" src={i.url} onClick={() => {
+                            {loadingImages ? <div className="text-center"><Spinner animation="border" variant="primary" /> </div> : <div className="custom-previews">
+                                {imageList.map((i) => (<Button key={tempIdButton++} width={200} height={200} variant="link outline-light" as="img" src={i.url} onClick={() => {
                                     setTitle("");
                                     setFont("Impact");
-                                    setColor("White");
+                                    setColor("Black");
                                     setSentence1("");
                                     setSentence2("");
                                     setSentence3("");
@@ -178,7 +197,7 @@ function ModalCreate(props) {
                                     setValidated(false);
                                     setCurrentImage(i);
                                 }} />))}
-                            </div>
+                            </div>}
                         </Col>
                         }
                         <Col>
@@ -189,7 +208,7 @@ function ModalCreate(props) {
                                     </p>
                                 </Col>
                             </Row>
-                            <Card>
+                            {loadingImages ? <div className="text-center"><Spinner animation="border" variant="primary" /> </div>: <Card>
                                 <Container className="card-relative" >
                                     <Card.Img variant="top" src={currentImage.url}></Card.Img>
                                     <Card.ImgOverlay className="text-center">
@@ -198,12 +217,12 @@ function ModalCreate(props) {
                                         <Card.Text className={"standard-text font-" + font.toLowerCase() + " color-" + color.toLowerCase() + " " + currentImage.cssSentencesPosition[2]}>{sentence3}</Card.Text>
                                     </Card.ImgOverlay>
                                 </Container>
-                            </Card>
+                            </Card>}
                         </Col>
-                        <Col xs={props.meme.title===""?3:5}>
-                            <MemeForm visibilityConstraint={visibilityConstraint} image={currentImage} title={title} setTitle={setTitle} font={font} setFont={setFont} color={color} setColor={setColor} sentence1={sentence1} setSentence1={setSentence1} 
-                            sentence2={sentence2} setSentence2={setSentence2} sentence3={sentence3} setSentence3={setSentence3} visibilityStatus={visibilityStatus} setVisibilityStatus={setVisibilityStatus} 
-                            validated={validated} emptyTitle={emptyTitle} longTitle={longTitle} oneSentenceSetted={oneSentenceSetted}/>
+                        <Col xs={props.meme.title === "" ? 3 : 5}>
+                            <MemeForm loadingImages={loadingImages} visibilityConstraint={props.meme.visibilityConstraint} image={currentImage} title={title} setTitle={setTitle} font={font} setFont={setFont} color={color} setColor={setColor} sentence1={sentence1} setSentence1={setSentence1}
+                                sentence2={sentence2} setSentence2={setSentence2} sentence3={sentence3} setSentence3={setSentence3} visibilityStatus={visibilityStatus} setVisibilityStatus={setVisibilityStatus}
+                                validated={validated} emptyTitle={emptyTitle} longTitle={longTitle} oneSentenceSetted={oneSentenceSetted} />
                         </Col>
                     </Row>
                 </Container>
@@ -216,7 +235,7 @@ function ModalCreate(props) {
                 }}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleSubmit}>
+                <Button variant="primary" onClick={handleSubmit} disabled={loadingImages}>
                     Save
                 </Button>
             </Modal.Footer>

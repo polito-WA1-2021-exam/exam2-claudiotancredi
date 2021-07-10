@@ -17,7 +17,6 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import API from './API';
 //import images
 import Meme from "./Meme";
-import Image from "./Image";
 import HashLoader from "react-spinners/HashLoader";
 
 function App() {
@@ -30,7 +29,6 @@ function App() {
   const [message, setMessage] = useState('');
   const [goToLogin, setGoToLogin] = useState(false);
   const [memeList, setMemeList] = useState([]);
-  const [imageList, setImageList] = useState([]);
   const [dirty, setDirty] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -63,12 +61,6 @@ function App() {
       })
     }
     else if (dirty && loggedIn===true) {
-      API.loadImages().then(newImageList => {
-        if (isMounted) {
-          newImageList = newImageList.map(i => new Image(i.id, i.url, i.cssSentencesPosition));
-          setImageList(newImageList);
-        }
-      }).catch((err) => { if (isMounted) { setImageList([]); } })
       API.loadAllMemes().then(newMemesList => {
         if (isMounted) {
           newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentence1, m.sentence2, m.sentence3, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName, m.creatorId));
@@ -80,8 +72,6 @@ function App() {
           setDirty(false);
         }
       })
-
-      //DOVREBBE ESSERE UN PO' SISTEMATO
     }
     //cleanup function
     return () => {
@@ -141,7 +131,7 @@ function App() {
           <Route exact path="/" render={() =>
             <>
               <HashLoader size={150} css={override} loading={loading} color={"#007bff"} />
-              {loading === false ? <MainContent userId={userId} loggedIn={loggedIn} memes={memeList} constr={Meme} setMemesList={setMemeList} setDirty={setDirty} username={userName} images={imageList} setLoading={setLoading} /> : <></>}
+              {loading === false ? <MainContent userId={userId} loggedIn={loggedIn} memes={memeList} constr={Meme} setMemesList={setMemeList} setDirty={setDirty} username={userName} setLoading={setLoading} /> : <></>}
             </>
           } />
         </Switch>

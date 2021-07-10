@@ -55,17 +55,21 @@ body {
 }
 
 .bottom-single-text {
-  max-height: 9%;
   bottom    : 0%;
   left      : 10%;
   width     : 80%;
+  height: 20% !important;
+  max-height: 2.8em !important;
+  line-height: 1.4em !important;
 }
 
 .bottom-single-text2 {
-  max-height: 12%;
   bottom    : -2%;
   left      : 10%;
   width     : 80%;
+  height: 20% !important;
+  max-height: 2.8em!important;
+  line-height: 1.4em !important;
 }
 
 .details-text {
@@ -84,25 +88,31 @@ body {
 /* Top right text */
 .top-right {
   width        : 45%;
-  max-height   : 35%;
+  height   : 35%;
   top          : 5%;
   right        : 3%;
+  max-height: 7.5em!important;
+  line-height: 1.5em !important;
 }
 
 /* Bottom right text */
 .bottom-right {
   width    : 45%;
-  max-height   : 37%;
+  height   : 35%;
   bottom       : 5%;
   right        : 3%;
+  max-height: 7.5em !important;
+  line-height: 1.5em !important;
 }
 
 /* Top left text */
 .top-left {
   width    : 42%;
-  max-height   : 27%;
+  height   : 27%;
   top          : 5%;
   left         : 5%;
+  max-height: 5.2em !important;
+  line-height: 1.3em !important;
 }
 
 /* Top center text
@@ -120,9 +130,11 @@ body {
 
 .center-left {
   width    : 42%;
-  max-height   : 27%;
+  height   : 27%;
   top          : 37%;
   left         : 5%;
+  max-height: 5.2em !important;
+  line-height: 1.3em !important;
 }
 
 /* Centered text
@@ -154,9 +166,11 @@ body {
 /* Bottom left text */
 .bottom-left {
   width    : 42%;
-  max-height   : 27%;
+  height   : 27%;
   top       : 69%;
   left         : 5%;
+  max-height: 5.2em !important;
+  line-height: 1.3em !important;
 }
 
 .color-button{
