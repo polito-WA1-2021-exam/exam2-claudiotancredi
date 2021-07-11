@@ -3,7 +3,7 @@ import './mycss/custom.css';
 //import bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import react-bootstrap components
-import { Container } from 'react-bootstrap';
+import { Container, Image } from 'react-bootstrap';
 //imports needed to use state
 import React, { useState, useEffect } from 'react';
 //import my components
@@ -15,68 +15,67 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router-dom';
 //import APIs
 import API from './API';
-//import images
-import Meme from "./Meme";
+//import HashLoader spinner component
 import HashLoader from "react-spinners/HashLoader";
+//import Utils
+import UTILS from './Utils';
+//import images
+import image404 from './myicons/404.gif';
 
 function App() {
   //Define a state to manage login. undefined -> request not satisfied yet, false -> user not logged in, true -> user logged in
+  //ATTENTION, the check loggedIn? is not enough, every time we need to check against true/false since undefined is a falsy
   const [loggedIn, setLoggedIn] = useState(undefined);
-  //Define a state to manage user information (its name, which will be displayed on the navbar)
+  //Define a state to manage user name
   const [userName, setUserName] = useState('');
+  //Define a state to manage user id
   const [userId, setUserId] = useState(undefined);
-  //Define a state for a message to show ("incorrect username and/or password")
+  //Define a state for a message to show ("incorrect username and/or password") during the login
   const [message, setMessage] = useState('');
+  //Define a state that will be set to true when we need to go to the login page, so that a redirect is rendered
   const [goToLogin, setGoToLogin] = useState(false);
+  //Define the list of memes
   const [memeList, setMemeList] = useState([]);
+  //Define a dirty state that will be true whenever we need to fetch memes from the server and will be set to false
+  //as soon as the operation finishes
   const [dirty, setDirty] = useState(true);
+  //Define a loading state used to show a loading spinner while HTTP requests are performed
   const [loading, setLoading] = useState(true);
+  //Define a state that will be used to render a redirect to /
+  const [goToIndex, setGoToIndex] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
-      API.getUserInfo().then((user) => { setLoggedIn(true); setUserName(user.name); setUserId(user.id)}).catch((err) => { console.error(err.error); setLoggedIn(false) }).finally(() => setDirty(true));
+      API.getUserInfo()
+        .then((user) => { setUserName(user.name); setUserId(user.id); setLoggedIn(true); })
+        .catch((err) => { console.error(err.error); setLoggedIn(false) });
     }
     checkAuth();
   }, []);
 
-  // Used at App component mount and triggered every time dirty state changes. 
-  // If dirty is true it performs a request to GET the tasks' list from the backend and updates the current taskList state.
+  // Used at App component mount and triggered every time dirty and loggedIn change. 
+  // If dirty is true it performs a request to GET the list of memes/public memes from the back-end and updates the current memeList state.
   // Then set the dirty and the loading states to false. 
   useEffect(() => {
-    //Variable used to avoid slow responses errors/fast filter changes caused by the user
-    let isMounted = true;
-    //Map each filter to the corresponding API function. This is useful to avoid code repetition
-    if (dirty && loggedIn===false) {
-      //Call the proper API function
-      API.loadPublicMemes().then(newMemesList => {
-        if (isMounted) {
-          newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentence1, m.sentence2, m.sentence3, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName, m.creatorId));
-          setMemeList(newMemesList);
+    const getMemes = () => {
+      if (dirty && loggedIn !== undefined) {
+        let func = undefined;
+        if (loggedIn === false) {
+          func = API.loadPublicMemes;
         }
-      }).catch((err) => { if (isMounted) { setMemeList([]); } }).finally(() => {
-        if (isMounted) {
-          setLoading(false);
-          setDirty(false);
+        else if (loggedIn === true) {
+          func = API.loadAllMemes;
         }
-      })
+        func()
+          .then(newMemesList => setMemeList(newMemesList))
+          .catch(() => setMemeList([]))
+          .finally(() => {
+            setLoading(false);
+            setDirty(false);
+          })
+      }
     }
-    else if (dirty && loggedIn===true) {
-      API.loadAllMemes().then(newMemesList => {
-        if (isMounted) {
-          newMemesList = newMemesList.map(m => new Meme(m.id, m.title, m.url, m.sentence1, m.sentence2, m.sentence3, m.cssSentencesPosition, m.cssFontClass, m.cssColourClass, m.prot, m.creatorName, m.creatorId));
-          setMemeList(newMemesList);
-        }
-      }).catch((err) => { if (isMounted) { setMemeList([]); } }).finally(() => {
-        if (isMounted) {
-          setLoading(false);
-          setDirty(false);
-        }
-      })
-    }
-    //cleanup function
-    return () => {
-      isMounted = false;
-    };
+    getMemes();
   }, [dirty, loggedIn]);
 
   const doLogIn = async (credentials) => {
@@ -84,6 +83,8 @@ function App() {
       const user = await API.logIn(credentials);
       setUserName(user.name);
       setUserId(user.id)
+      setMemeList([]);
+      setGoToLogin(false);
       setLoggedIn(true);
       setMessage('');
     } catch (err) {
@@ -103,38 +104,42 @@ function App() {
     setUserId(undefined);
     setMessage('');
     setGoToLogin(false);
+    setGoToIndex(true);
     setLoading(true);
     setDirty(true);
   }
 
-  const override = `
-  margin       : 0;
-  position     : absolute;
-  top          : 50%;
-  left         : 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform    : translate(-50%, -50%);
-`;
-
   return (
     <Router>
       <Container fluid>
-        {loggedIn === true ? (<NavBar username={userName} loggedIn={loggedIn} doLogOut={doLogOut} />) : <></>}
 
+        {loggedIn === true ? (<NavBar username={userName} loggedIn={loggedIn} doLogOut={doLogOut} />) : <></>}
         {loggedIn === false ? (<NavBar username={userName} loggedIn={loggedIn} setGoToLogin={setGoToLogin} />) : <></>}
+
         {goToLogin && <Redirect to="/login" />}
+        {goToIndex && <Redirect to="/" />}
+
         <Switch>
+
           <Route exact path="/login" render={() =>
-            <>{loggedIn === true ? <Redirect to="/" /> : <></>}
+            <>
+              {loggedIn === true ? <Redirect to="/" /> : <></>}
               {loggedIn === false ? <LoginForm setLoading={setLoading} login={doLogIn} message={message} setMessage={setMessage} setGoToLogin={setGoToLogin} setDirty={setDirty} /> : <></>}
             </>} />
+
           <Route exact path="/" render={() =>
             <>
-              <HashLoader size={150} css={override} loading={loading} color={"#007bff"} />
-              {loading === false ? <MainContent userId={userId} loggedIn={loggedIn} memes={memeList} constr={Meme} setMemesList={setMemeList} setDirty={setDirty} username={userName} setLoading={setLoading} /> : <></>}
+              <HashLoader size={UTILS.hashLoaderSize} css={UTILS.cssForHashLoader()} loading={loading} color={UTILS.primaryColor} />
+              {loading === false ? <MainContent userId={userId} loggedIn={loggedIn} memes={memeList} setMemesList={setMemeList} setDirty={setDirty} username={userName} setLoading={setLoading} /> : <></>}
             </>
           } />
+
+          <Route>
+            <Image className="center" src={image404} />
+          </Route>
+
         </Switch>
+
       </Container>
     </Router>
   );

@@ -1,25 +1,21 @@
-/* Global */
-.vheight-100 {
-  min-height: 100vh;
-}
-
+/* Add space so that items are shown below the navbar*/
 body {
   padding-top: 70px;
 }
 
-.card-list-relative {
-  display   : inline-block;
-  position  : relative;
+/* Style container for meme*/
+.card-relative {
+  display    : inline-block;
+  position   : relative;
   align-items: center !important;
-  width     : 100%;
-  cursor    : pointer;
+  width      : 100%;
 }
 
-.card-relative {
-  display   : inline-block;
-  position  : relative;
-  align-items: center !important;
-  width     : 100%;
+/* Add the hand cursor while passing on memes so that 
+the user can click and see the details. It is used in combination
+with card-relative */
+.clickable {
+  cursor: pointer;
 }
 
 .font-impact {
@@ -46,6 +42,24 @@ body {
   color: white;
 }
 
+/* Style text with italic */
+.italic-text {
+  font-style: italic;
+  text-align: center;
+  font-size : 18px;
+}
+
+/* Style the list of images where the user can choose the background during the meme creation */
+.custom-previews {
+  max-height : 370px;
+  overflow-y : scroll;
+  align-items: center;
+  text-align : center;
+}
+
+/* Some CSS attributes in common between overlayed texts.
+They are used in combination with the other CSS
+classes about the position (bottom-single-text, etc.) */
 .standard-text {
   word-wrap    : break-word !important;
   overflow     : hidden !important;
@@ -54,185 +68,107 @@ body {
   position     : absolute;
 }
 
+/* Bottom text 1st version */
 .bottom-single-text {
-  bottom    : 0%;
-  left      : 10%;
-  width     : 80%;
-  height: 20% !important;
-  max-height: 2.8em !important;
+  bottom     : 0%;
+  left       : 10%;
+  width      : 80%;
+  height     : 20% !important;
+  max-height : 2.8em !important;
   line-height: 1.4em !important;
 }
 
+/* Bottom text 2nd version */
 .bottom-single-text2 {
-  bottom    : -2%;
-  left      : 10%;
-  width     : 80%;
-  height: 20% !important;
-  max-height: 2.8em!important;
+  bottom     : -2%;
+  left       : 10%;
+  width      : 80%;
+  height     : 20% !important;
+  max-height : 2.8em !important;
   line-height: 1.4em !important;
-}
-
-.details-text {
-  font-style: italic;
-  text-align: center;
-  font-size : 18px;
-}
-
-.custom-previews {
-  max-height : 370px;
-  overflow-y : scroll;
-  align-items: center;
-  text-align : center;
 }
 
 /* Top right text */
 .top-right {
-  width        : 45%;
-  height   : 35%;
-  top          : 5%;
-  right        : 3%;
-  max-height: 7.5em!important;
+  width      : 45%;
+  height     : 35%;
+  top        : 5%;
+  right      : 3%;
+  max-height : 7.5em !important;
   line-height: 1.5em !important;
 }
 
 /* Bottom right text */
 .bottom-right {
-  width    : 45%;
-  height   : 35%;
-  bottom       : 5%;
-  right        : 3%;
-  max-height: 7.5em !important;
+  width      : 45%;
+  height     : 35%;
+  bottom     : 5%;
+  right      : 3%;
+  max-height : 7.5em !important;
   line-height: 1.5em !important;
 }
 
 /* Top left text */
 .top-left {
-  width    : 42%;
-  height   : 27%;
-  top          : 5%;
-  left         : 5%;
-  max-height: 5.2em !important;
+  width      : 42%;
+  height     : 27%;
+  top        : 5%;
+  left       : 5%;
+  max-height : 5.2em !important;
   line-height: 1.3em !important;
 }
 
-/* Top center text
-.top-center {
-  max-width    : 25%;
-  max-height   : 25%;
-  position     : absolute;
-  top          : 80px;
-  left         : 37%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
-} */
-
+/* Center left text */
 .center-left {
-  width    : 42%;
-  height   : 27%;
-  top          : 37%;
-  left         : 5%;
-  max-height: 5.2em !important;
+  width      : 42%;
+  height     : 27%;
+  top        : 37%;
+  left       : 5%;
+  max-height : 5.2em !important;
   line-height: 1.3em !important;
 }
-
-/* Centered text
-.center-center {
-  max-width    : 25%;
-  max-height   : 25%;
-  position     : absolute;
-  top          : 45%;
-  left         : 37%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
-} */
-
-/* Cente-right text
-.center-right {
-  max-width    : 25%;
-  max-height   : 25%;
-  position     : absolute;
-  top          : 45%;
-  right        : 16px;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
-} */
 
 /* Bottom left text */
 .bottom-left {
-  width    : 42%;
-  height   : 27%;
-  top       : 69%;
-  left         : 5%;
-  max-height: 5.2em !important;
+  width      : 42%;
+  height     : 27%;
+  top        : 69%;
+  left       : 5%;
+  max-height : 5.2em !important;
   line-height: 1.3em !important;
 }
 
-.color-button{
-  position:relative;
+/* Style for buttons that allow choosing a color */
+.color-button {
+  position     : relative;
   border-radius: 30% !important;
-  height: 28px;
-  width: 27px;
-  border-color:black !important;
+  height       : 28px;
+  width        : 27px;
+  border-color : black !important;
 }
 
-.color-button-black{
+.color-button-black {
   background: black !important;
 }
 
-.color-button-red{
+.color-button-red {
   background: red !important;
 }
 
-.color-button-green{
+.color-button-green {
   background: green !important;
 }
 
-.color-button-white{
+.color-button-white {
   background: white !important;
 }
 
-.text-area-resize{
-  resize:none;
+/* Custom text-area, without the possibility to expand it */
+.text-area-resize {
+  resize: none;
 }
 
-/* Bottom center text
-.bottom-center {
-  max-width    : 25%;
-  max-height   : 25%;
-  position     : absolute;
-  bottom       : -10px;
-  left         : 37%;
-  word-wrap    : break-word !important;
-  overflow     : hidden !important;
-  text-overflow: clip !important;
-  overflow-wrap: break-word !important;
-} */
-
-.below-nav {
-  padding-top: 5rem;
-}
-
-/* Filters and projects */
-.list-group-item {
-  background-color: transparent !important;
-}
-
-.list-group-item.active {
-  background-color: #28a745 !important;
-  border-color    : #28a745 !important;
-}
-
-.list-group-item-action:hover {
-  background-color: #9becae !important;
-}
-
-/* Add task button */
+/* Button for creating a new meme */
 .fixed-right-bottom {
   position     : fixed;
   right        : 0;
@@ -242,22 +178,13 @@ body {
   border-radius: 50% !important;
 }
 
-/*Remove borders from aside items and style them as "flush".
-   It can't be done with variant="flush" on ListGroup since its children
-   are not ListGroup.Item, they are Link*/
-.flushStyle {
-  border-left : none !important;
-  border-right: none !important;
-  border-top  : none !important;
-}
-
-/*Style the logout button*/
-.logout {
+/*Style the login and logout button*/
+.log-button {
   color          : #FFFFFF !important;
   text-decoration: none !important;
 }
 
-/*Center the login form*/
+/*Center the login form and the image used when there are no memes in the db*/
 .center {
   margin       : 0;
   position     : absolute;

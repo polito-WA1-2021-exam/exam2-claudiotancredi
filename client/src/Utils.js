@@ -1,0 +1,43 @@
+function cssForHashLoader() {
+    const override = `
+    margin       : 0;
+    position     : absolute;
+    top          : 50%;
+    left         : 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform    : translate(-50%, -50%);
+  `;
+    return override;
+}
+
+const primaryColor = "#007bff";
+const hashLoaderSize = 150;
+
+const fontMapping = {
+    "font-arial": "Arial",
+    "font-impact": "Impact"
+}
+const colorMapping = {
+    "color-red": "Red",
+    "color-white": "White",
+    "color-black": "Black",
+    "color-green": "Green"
+}
+
+function emptyMeme(username){
+    return ({
+        title: "",
+        url: "http://localhost:3000/static/old.png",
+        sentence1: "",
+        sentence2: "",
+        sentence3: "",
+        cssSentencesPosition: ["bottom-single-text", "", ""],
+        font: "Impact",
+        color: "Black",
+        prot: "Protected",
+        creatorName: username
+    })
+}
+
+const UTILS = { cssForHashLoader, primaryColor, hashLoaderSize, fontMapping, colorMapping, emptyMeme };
+export default UTILS;

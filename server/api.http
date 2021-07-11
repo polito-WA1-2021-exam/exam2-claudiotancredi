@@ -28,7 +28,7 @@ GET {{server}}/api/sessions/current
 ### STATIC CONTENT
 
 ### Get a static resource (image)
-GET {{server}}/static/bike.png
+GET {{server}}/static/old.png
 
 
 
@@ -37,26 +37,58 @@ GET {{server}}/static/bike.png
 
 ### MEMES
 
-DELETE {{server}}/api/memes/2
-
-
-###
+### GET all the memes from the server (both public and protected)
 GET {{server}}/api/memes
 
-###
+### GET all the PUBLIC memes from the server
 GET {{server}}/api/memes/filter=public
 
-###
+### POST to store a new meme into the server. Valid body.
 POST {{server}}/api/memes
 Content-Type: application/json
 
 {
-	"title": "Test7",
+	"title": "Test1",
 	"imageId": 1,
-    "sentence1": "Prova",
+    "sentence1": "Text1",
     "sentence2": "",
     "sentence3": "",
     "cssFontClass":"font-impact",
     "cssColourClass":"color-white",
     "prot": true
 }
+
+### POST to store a new meme into the server. Invalid body.
+POST {{server}}/api/memes
+Content-Type: application/json
+
+{
+	"title": "ca",
+	"imageId": "String",
+    "sentence1": 3,
+    "sentence2": 4,
+    "sentence3": 5,
+    "cssFontClass":5,
+    "cssColourClass":true,
+    "prot": "String"
+}
+
+### DELETE a meme with the given id.
+DELETE {{server}}/api/memes/10
+
+### DELETE a meme with the given id. Invalid param.
+DELETE {{server}}/api/memes/2a 
+
+### DELETE a meme with the given id. Id of a meme that is not in the db.
+DELETE {{server}}/api/memes/2233 
+
+
+
+
+
+
+
+### IMAGES
+
+### GET all the images from the server
+GET {{server}}/api/images

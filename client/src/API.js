@@ -1,29 +1,27 @@
+import Meme from "./Meme";
+import Image from "./Image";
+
 const url = 'http://localhost:3000';
 
-
 /**
- * Constructor for an exception object
- * @param {string} msg String with the error message of the HTTP request
+ * Function that performs an async GET request to retrieve all the memes using the proxy call to reach the API server
+ * @returns Promise to be consumed with the list of memes
  */
- function ResponseException(msg) {
-    this.msg = msg;
-}
-
 async function loadAllMemes() {
     const response = await fetch(url + '/api/memes');
-    if (!response.ok) {
-        throw new ResponseException(response.status + " " + response.statusText);
+    if (response.ok) {
+        const memes = await response.json();
+        return memes.map(m => new Meme(m.id, m.title, url + m.url, m.sentence1, m.sentence2, 
+            m.sentence3, m.cssSentencesPosition.split(","), m.cssFontClass, 
+            m.cssColourClass, Boolean(m.protected), m.name, m.user))
     }
-    const memes = await response.json();
-    return memes.map(m => {
-        m = ({ ...m, url: url + m.url, prot: (Boolean(m.protected)) , creatorName: m.name, creatorId: m.user, cssSentencesPosition: m.cssSentencesPosition.split(",")});
-        delete m.protected;
-        delete m.name;
-        delete m.user
-        return m;
-    });
+    return [];
 }
 
+/**
+ * Function that will perform a POST request to the server to store a new meme.
+ * @param {object} newMeme A meme object with the info of the meme to send to the server
+ */
 async function addNewMeme(newMeme) {
     await fetch(url + '/api/memes', {
         method: 'POST',
@@ -41,38 +39,42 @@ async function addNewMeme(newMeme) {
     });
 }
 
-
-async function loadImages() {
-    const response = await fetch(url + '/api/images');
-    if (!response.ok) {
-        throw new ResponseException(response.status + " " + response.statusText);
-    }
-    const images = await response.json();
-    return images.map(i => {
-        i = ({ ...i, url: url + i.url, cssSentencesPosition: i.cssSentencesPosition.split(",")});
-        return i;
-    });
-}
-
+/**
+ * Function that performs an async GET request to retrieve all the PUBLIC memes using the proxy call to reach the API server
+ * @returns Promise to be consumed with the list of memes
+ */
 async function loadPublicMemes() {
     const response = await fetch(url + '/api/memes/filter=public');
-    if (!response.ok) {
-        throw new ResponseException(response.status + " " + response.statusText);
+    if (response.ok) {
+        const pubmemes = await response.json();
+        return pubmemes.map(m => new Meme(m.id, m.title, url + m.url, m.sentence1, m.sentence2, 
+            m.sentence3, m.cssSentencesPosition.split(","), m.cssFontClass, 
+            m.cssColourClass, Boolean(m.protected), m.name, m.user))
     }
-    const pubmemes = await response.json();
-    return pubmemes.map(m => {
-        m = ({ ...m, url: url + m.url, prot: (Boolean(m.protected)) , creatorName: m.name, creatorId: m.user, cssSentencesPosition: m.cssSentencesPosition.split(",")});
-        delete m.protected;
-        delete m.name;
-        delete m.user;
-        return m;
-    });
+    return [];
 }
 
+/**
+ * Function that performs a DELETE request to the server to delete an existing meme with given id.
+ * @param {number} idMeme Id of the meme to delete on the server
+ */
 async function deleteMeme(idMeme) {
     await fetch(url + '/api/memes/' + idMeme, {
         method: 'DELETE'
     });
+}
+
+/**
+ * Function that performs an async GET request to retrieve all the images using the proxy call to reach the API server
+ * @returns Promise to be consumed with the list of images
+ */
+async function loadImages() {
+    const response = await fetch(url + '/api/images');
+    if (response.ok) {
+        const images = await response.json();
+        return images.map(i => new Image(i.id, url + i.url, i.cssSentencesPosition.split(",")));
+    }
+    return [];
 }
 
 /**

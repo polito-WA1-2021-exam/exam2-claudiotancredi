@@ -4,11 +4,7 @@ import { Button, Modal, Card, Container, Row, Col, Form, Spinner } from 'react-b
 import React, { useState, useEffect } from 'react';
 import API from '../API';
 import Image from '../Image';
-
-const addMeme = (newMemeForServer, newMemeForList, setDirty, setMemesList) => {
-    setMemesList((oldList) => oldList.concat(newMemeForList));
-    API.addNewMeme(newMemeForServer).then(() => setDirty(true));
-}
+import Meme from '../Meme';
 
 function SentenceField(props) {
     return (<Form.Row>
@@ -23,26 +19,26 @@ function SentenceField(props) {
 
 function MemeForm(props) {
     let tempId = 1;
-    //Flag used to set isInvalid on description Form.Control so that special style is applied
+    //Flag used to set isInvalid on title Form.Control so that special style is applied
     let invalidTitleFlag = ((props.validated === true && props.emptyTitle === true) || (props.validated === true && props.emptyTitle === false && props.longTitle === false));
 
-    //Form.Control.Feedback error messages for description. They're shown only when conditions are met
+    //Form.Control.Feedback error messages for title. They're shown only when conditions are met
     let emptyTitleErrorMessage = (props.validated === true && props.emptyTitle === true) ?
         (<Form.Control.Feedback type="invalid">Please provide a title for the Meme.</Form.Control.Feedback>) : "";
     let shortTitleErrorMessage = (props.validated === true && props.emptyTitle === false && props.longTitle === false) ?
         (<Form.Control.Feedback type="invalid">The title must be at least 5 characters long.</Form.Control.Feedback>) : "";
 
-    //Flag used to set isInvalid on description Form.Control so that special style is applied
+    //Flag used to set isInvalid on sentenceX Form.Control so that special style is applied
     let invalidSentencesFlag = ((props.validated === true && props.oneSentenceSetted === false));
 
-    //Form.Control.Feedback error messages for description. They're shown only when conditions are met
+    //Form.Control.Feedback error messages for sentences. They're shown only when conditions are met
     let emptySentencesErrorMessage = (props.validated === true && props.oneSentenceSetted === false) ?
         (<Form.Control.Feedback type="invalid">At least one sentence is required.</Form.Control.Feedback>) : "";
 
     return (<>
         <Form>
-            <p className="details-text">
-                Customize your meme
+            <p className="italic-text">
+                Customize the meme
             </p>
             <Form.Row>
                 <Form.Group as={Col} xs="12" controlId="titleForm">
@@ -91,7 +87,7 @@ function MemeForm(props) {
 
 function ModalCreate(props) {
     const modalTitle = (props.meme.title === "" ? "New meme" : "Copy meme");
-    let tempIdButton = 0;
+    let tempIdButton = 1;
 
     const [currentImage, setCurrentImage] = useState(undefined);
     const [title, setTitle] = useState(props.meme.title);
@@ -110,7 +106,22 @@ function ModalCreate(props) {
     const [imageList, setImageList] = useState([]);
     const [loadingImages, setLoadingImages] = useState(true);
 
-    const memeUrl=props.meme.url;
+    const memeUrl = props.meme.url;
+
+    const resetStates = (image) => {
+        setTitle("");
+        setFont("Impact");
+        setColor("Black");
+        setSentence1("");
+        setSentence2("");
+        setSentence3("");
+        setVisibilityStatus("Protected");
+        setEmptyTitle(true);
+        setLongTitle(false);
+        setOneSentenceSetted(false);
+        setValidated(false);
+        setCurrentImage(image);
+    }
 
     useEffect(() => {
         const getImages = () => {
@@ -118,31 +129,34 @@ function ModalCreate(props) {
                 newImageList = newImageList.map(i => new Image(i.id, i.url, i.cssSentencesPosition));
                 setImageList(newImageList);
                 setCurrentImage(newImageList.filter(element => element.url === memeUrl)[0]);
-            }).catch((err) => { setImageList([]); }).finally(() => {
+            }).catch(() => setImageList([])).finally(() => {
                 setLoadingImages(false);
             })
         }
         getImages();
     }, [memeUrl]);
 
+    const addMeme = (newMemeForServer, newMemeForList) => {
+        props.setMemesList((oldList) => oldList.concat(newMemeForList));
+        API.addNewMeme(newMemeForServer).then(() => props.setDirty(true));
+    }
+
     const addMemeThenCloseModal = () => {
         const newMemeForServer = { title: title, imageId: currentImage.id, sentence1: sentence1, sentence2: sentence2, sentence3: sentence3, cssFontClass: "font-" + font.toLowerCase(), cssColourClass: "color-" + color.toLowerCase(), prot: visibilityStatus === "Protected" };
-        const newMemeForList = new props.constr(`meme${props.tempMemeId}`, title, currentImage.url, sentence1, sentence2, sentence3, currentImage.cssSentencesPosition, "font-" + font.toLowerCase(), "color-" + color.toLowerCase(), visibilityStatus === "Protected", props.username, props.userId, true);
+        const newMemeForList = new Meme(`meme${props.tempMemeId}`, title, currentImage.url, sentence1, sentence2, sentence3, currentImage.cssSentencesPosition, "font-" + font.toLowerCase(), "color-" + color.toLowerCase(), visibilityStatus === "Protected", props.username, props.userId, true);
         props.setTempMemeId((id) => id + 1);
-        addMeme(newMemeForServer, newMemeForList, props.setDirty, props.setMemesList);
+        addMeme(newMemeForServer, newMemeForList);
         props.setModal(false);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        //Check if the form is valid, if so add/edit the task and close the modal
-        //First case: description long enough, both date and time set, deadline is set
+        //Check if the form is valid, if so add the meme and close the modal
         if (title.length >= 5 && (sentence1 !== "" || sentence2 !== "" || sentence3 !== "")) {
             addMemeThenCloseModal();
         }
         else {
             // Form is not valid, but perform validation and update states accordingly so that messages are shown on the form
-            // Validation for description:
             if (title.length === 0) {
                 setEmptyTitle(true);
                 setLongTitle(false);
@@ -180,22 +194,11 @@ function ModalCreate(props) {
                     <Row className="align-items-center">
                         {modalTitle === "New meme" && <Col xs={3} className="card-relative">
                             <Row>
-                                <p className="details-text">Choose a background image for the meme</p>
+                                <p className="italic-text">Choose a background image for the meme</p>
                             </Row>
                             {loadingImages ? <div className="text-center"><Spinner animation="border" variant="primary" /> </div> : <div className="custom-previews">
                                 {imageList.map((i) => (<Button key={tempIdButton++} width={200} height={200} variant="link outline-light" as="img" src={i.url} onClick={() => {
-                                    setTitle("");
-                                    setFont("Impact");
-                                    setColor("Black");
-                                    setSentence1("");
-                                    setSentence2("");
-                                    setSentence3("");
-                                    setVisibilityStatus("Protected");
-                                    setEmptyTitle(true);
-                                    setLongTitle(false);
-                                    setOneSentenceSetted(false);
-                                    setValidated(false);
-                                    setCurrentImage(i);
+                                    resetStates(i);
                                 }} />))}
                             </div>}
                         </Col>
@@ -203,12 +206,12 @@ function ModalCreate(props) {
                         <Col>
                             <Row>
                                 <Col>
-                                    <p className="details-text">
+                                    <p className="italic-text">
                                         Preview
                                     </p>
                                 </Col>
                             </Row>
-                            {loadingImages ? <div className="text-center"><Spinner animation="border" variant="primary" /> </div>: <Card>
+                            {loadingImages ? <div className="text-center"><Spinner animation="border" variant="primary" /> </div> : <Card>
                                 <Container className="card-relative" >
                                     <Card.Img variant="top" src={currentImage.url}></Card.Img>
                                     <Card.ImgOverlay className="text-center">

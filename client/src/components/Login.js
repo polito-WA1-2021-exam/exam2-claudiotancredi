@@ -10,6 +10,7 @@ function LoginForm(props) {
     const [password, setPassword] = useState('');
     //Define a state for the error message to show in case there are problems with the fields
     const [errorMessage, setErrorMessage] = useState('');
+    //Define a state that will be set to true and will enable a redirect to /
     const [goToHomePage, setGoToHomePage] = useState(false);
 
     const handleSubmit = (event) => {
@@ -33,9 +34,12 @@ function LoginForm(props) {
         <>
             {goToHomePage && (<Redirect to="/" />)}
             <div className="center">
+
                 <Row className="text-center"><h1>Meme Generator</h1></Row>
+
                 <Row className="justify-content-center">
                     <Form>
+
                         <Row>
                             <Form.Group as={Col} xs="12" controlId='username'>
                                 <Container className="text-center">
@@ -44,6 +48,7 @@ function LoginForm(props) {
                                 <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
                             </Form.Group>
                         </Row>
+
                         <Row>
                             <Form.Group as={Col} xs="12" controlId='password'>
                                 <Container className="text-center">
@@ -52,22 +57,28 @@ function LoginForm(props) {
                                 <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
                             </Form.Group>
                         </Row>
+
                         <Row className="justify-content-center">
                             {errorMessage ? <Alert as={Col} xs="12" variant='danger' onClose={() => setErrorMessage('')} dismissible>{errorMessage}</Alert> : ''}
                         </Row>
+
                         <Row className="justify-content-center">
                             {props.message &&
                                 <Alert variant={props.message.type} as={Col} xs="12" onClose={() => props.setMessage('')} dismissible>{props.message.msg}</Alert>}
                         </Row>
+
                         <Row className="justify-content-between">
-                            <Button variant="secondary" as={Col} xs="5" onClick={()=>{
+                            <Button variant="secondary" as={Col} xs="5" onClick={() => {
                                 props.setGoToLogin(false);
                                 setGoToHomePage(true);
                                 props.setLoading(true);
                                 props.setDirty(true);
-                            }}>Go back</Button>
+                            }}>
+                                Go back
+                            </Button>
                             <Button variant="primary" as={Col} xs="5" onClick={handleSubmit}>Login</Button>
                         </Row>
+
                     </Form>
                 </Row>
             </div>

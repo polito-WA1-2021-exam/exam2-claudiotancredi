@@ -8,23 +8,23 @@ function Logo() {
     //Logo custom component (icon + name)
     return (
         <Navbar.Brand>
-            <Image width={30} height={30} src={dog}/>{' '}
+            <Image width={30} height={30} src={dog} />{' '}
             Meme Generator
         </Navbar.Brand>
     )
 }
 
 function ProfileIcon(props) {
-    //ProfileIcon custom component - no implementation required here.
+    //ProfileIcon custom component
     return (<>
         <Row>
-        <Navbar.Brand>
-            {props.username}{' '}
-            {props.loggedIn ? <Image src={profileIcon} width={30} height={30}/>: <></>}
-        </Navbar.Brand>
-        <Button className="logout " size="md" variant="link outline-light" as="title" onClick={()=>props.loggedIn? props.doLogOut():props.setGoToLogin(true)}>
-            {props.loggedIn ? "Logout" : "Login"}
-        </Button>
+            <Navbar.Brand>
+                {props.username}{' '}
+                {props.loggedIn ? <Image src={profileIcon} width={30} height={30} /> : <></>}
+            </Navbar.Brand>
+            <Button className="log-button " size="md" variant="link outline-light" as="title" onClick={() => props.loggedIn ? props.doLogOut() : props.setGoToLogin(true)}>
+                {props.loggedIn ? "Logout" : "Login"}
+            </Button>
         </Row>
     </>)
 }
@@ -36,7 +36,7 @@ function NavBar(props) {
 
             <Logo />
 
-            <ProfileIcon username={props.username} loggedIn={props.loggedIn} doLogOut={props.doLogOut} setGoToLogin={props.setGoToLogin}/>
+            <ProfileIcon username={props.username} loggedIn={props.loggedIn} doLogOut={props.doLogOut} setGoToLogin={props.setGoToLogin} />
 
         </Navbar>
     )
