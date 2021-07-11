@@ -86,7 +86,7 @@ function MemeCard(props) {
                 <Button size="md" variant="primary" onClick={props.meme.temp ? null : () => {
                     let editedMeme = new Meme(props.meme.id, props.meme.title, props.meme.url, props.meme.sentence1, props.meme.sentence2, props.meme.sentence3, props.meme.cssSentencesPosition, props.meme.cssFontClass, props.meme.cssColourClass, props.meme.prot, props.meme.creatorName, props.meme.creatorId, true);
                     deleteMeme(editedMeme);
-                }} disabled={(props.username !== props.meme.creatorName) || props.meme.temp}>Delete meme</Button>
+                }} disabled={(props.userId !== props.meme.creatorId) || props.meme.temp}>Delete meme</Button>
             </Card.Footer>}
         </Card>)
 }

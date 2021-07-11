@@ -647,10 +647,11 @@ Connection: close
 ```
 
 ## Database Tables
-
-- Table `users` - contains id, email, name, hash
-- Table `images` - contains id, url, cssSentencesPosition ; cssSentencesPosition will contain the strings of the CSS classes for the different positions of the overlayed sentences, separated by commas
-- Table `memes` - contains id, title, bgImage, sentence1, sentence2, sentence3, cssFontClass, cssColourClass, protected, user
+PK = Primary Key  
+FK = Foreign Key
+- Table `users` - contains id (PK), email, name, hash
+- Table `images` - contains id (PK), url, cssSentencesPosition ; cssSentencesPosition will contain the strings of the CSS classes for the different positions of the overlayed sentences, separated by commas
+- Table `memes` - contains id (PK), title, bgImage (FK), sentence1, sentence2, sentence3, cssFontClass, cssColourClass, protected, user (FK)
 
 ## Main React Components
 
