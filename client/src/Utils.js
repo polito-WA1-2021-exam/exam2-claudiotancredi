@@ -15,7 +15,7 @@ const hashLoaderSize = 150;
 
 const fontMapping = {
     "font-arial": "Arial",
-    "font-impact": "Impact"
+    "font-courier": "Courier"
 }
 const colorMapping = {
     "color-red": "Red",
@@ -33,7 +33,7 @@ function emptyMeme(username){
         sentence2: "",
         sentence3: "",
         cssSentencesPosition: ["bottom-single-text", "", ""],
-        font: "Impact",
+        font: "Courier",
         color: "Black",
         prot: "Protected",
         creatorName: username
