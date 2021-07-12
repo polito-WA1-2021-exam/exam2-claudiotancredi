@@ -134,6 +134,11 @@ function ModalCreate(props) {
             })
         }
         getImages();
+        return () => {
+            setImageList([]);
+            setCurrentImage(undefined);
+            setLoadingImages(true);
+        }
     }, [memeUrl]);
 
     const addMeme = (newMemeForServer, newMemeForList) => {
