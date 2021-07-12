@@ -3,13 +3,14 @@ import './mycss/custom.css';
 //import bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import react-bootstrap components
-import { Container, Image } from 'react-bootstrap';
+import { Container} from 'react-bootstrap';
 //imports needed to use state
 import React, { useState, useEffect } from 'react';
 //import my components
 import NavBar from './components/Navbar';
 import LoginForm from './components/Login';
-import MainContent from './components/MainContent'
+import MainContent from './components/MainContent';
+import DefaultRoute from './components/DefaultRoute';
 //import react-router-dom components
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Switch, Redirect } from 'react-router-dom';
@@ -19,8 +20,6 @@ import API from './API';
 import HashLoader from "react-spinners/HashLoader";
 //import Utils
 import UTILS from './Utils';
-//import images
-import image404 from './myicons/404.gif';
 
 function App() {
   //Define a state to manage login. undefined -> request not satisfied yet, false -> user not logged in, true -> user logged in
@@ -135,7 +134,7 @@ function App() {
           } />
 
           <Route>
-            <Image className="center" src={image404} />
+            <DefaultRoute setDirty={setDirty} setLoading={setLoading} setGoToIndex={setGoToIndex} setGoToLogin={setGoToLogin}></DefaultRoute>
           </Route>
 
         </Switch>

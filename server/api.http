@@ -65,9 +65,9 @@ Content-Type: application/json
 {
 	"title": "ca",
 	"imageId": "String",
-    "sentence1": 3,
+    "sentence1": "",
     "sentence2": 4,
-    "sentence3": 5,
+    "sentence3": "",
     "cssFontClass":5,
     "cssColourClass":true,
     "prot": "String"

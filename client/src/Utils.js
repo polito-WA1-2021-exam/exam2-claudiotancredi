@@ -24,6 +24,7 @@ const colorMapping = {
     "color-green": "Green"
 }
 
+//Define a function to get a predefined meme object used at modal opening for meme creation
 function emptyMeme(username){
     return ({
         title: "",

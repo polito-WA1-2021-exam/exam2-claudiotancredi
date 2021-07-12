@@ -151,11 +151,14 @@ app.post('/api/memes', isLoggedIn, async (req, res) => {
         body('title').isString().withMessage("Must be a string").bail().isLength({ min: 5 }).withMessage("Must be at least 5 chars long").run(req),
         //Important must be a boolean
         body('imageId').isInt().withMessage("Must be an integer").run(req),
-        body('sentence1').isString().withMessage("Must be a string").run(req),
-        body('sentence2').isString().withMessage("Must be a string").run(req),
-        body('sentence3').isString().withMessage("Must be a string").run(req),
-        body('cssFontClass').isString().withMessage("Must be a string").run(req),
-        body('cssColourClass').isString().withMessage("Must be a string").run(req),
+        body(['sentence1', 'sentence2', 'sentence3']).custom(() => {
+            if (typeof(req.body.sentence1)==='string' && typeof(req.body.sentence2)==='string' && typeof(req.body.sentence3)==='string' &&
+            (req.body.sentence1!=="" || req.body.sentence2!=="" || req.body.sentence3!==""))
+                return true;
+            else
+                return false;
+        }).withMessage("Sentences must be strings and at least one of them must be non-empty").run(req),
+        body(['cssFontClass', 'cssColourClass']).isString().withMessage("Must be a string").run(req),
         body('prot').isBoolean().withMessage("Must be a boolean (true/false)").run(req)
     ]);
     const errors = validationResult(req);

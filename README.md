@@ -407,9 +407,9 @@ Content-Type: application/json
 {
     "title": "ca",
     "imageId": "String",
-    "sentence1": 3,
+    "sentence1": "",
     "sentence2": 4,
-    "sentence3": 5,
+    "sentence3": "",
     "cssFontClass":5,
     "cssColourClass":true,
     "prot": "String"
@@ -449,9 +449,9 @@ Connection: close
 HTTP/1.1 422 Unprocessable Entity
 X-Powered-By: Express
 Content-Type: application/json; charset=utf-8
-Content-Length: 658
-ETag: W/"292-l+uAE3tZ/yUbzV8s9k5Wdvrk8rc"
-Date: Sun, 11 Jul 2021 05:39:44 GMT
+Content-Length: 816
+ETag: W/"330-VSs0CRY8ewTGQWspTUPdjHK4Apg"
+Date: Sun, 11 Jul 2021 18:13:53 GMT
 Connection: close
 
 {
@@ -469,20 +469,20 @@ Connection: close
       "location": "body"
     },
     {
-      "value": 3,
-      "msg": "Must be a string",
+      "value": "",
+      "msg": "Sentences must be strings and at least one of them must be non-empty",
       "param": "sentence1",
       "location": "body"
     },
     {
       "value": 4,
-      "msg": "Must be a string",
+      "msg": "Sentences must be strings and at least one of them must be non-empty",
       "param": "sentence2",
       "location": "body"
     },
     {
-      "value": 5,
-      "msg": "Must be a string",
+      "value": "",
+      "msg": "Sentences must be strings and at least one of them must be non-empty",
       "param": "sentence3",
       "location": "body"
     },
@@ -538,6 +538,19 @@ Connection: close
 }
 ```
 **Error response(s)**: <br/>
+```http
+HTTP/1.1 401 Unauthorized
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 29
+ETag: W/"1d-UanYH2PSt0KmMjFYYCxoQ9Lf+Ao"
+Date: Mon, 12 Jul 2021 06:53:24 GMT
+Connection: close
+
+{
+  "error": "not authenticated"
+}
+```
 ```http
 HTTP/1.1 404 Not Found
 X-Powered-By: Express
@@ -661,6 +674,7 @@ FK = Foreign Key
 - `MainContent` (in `MainContent.js`): component used to render the list of memes
 - `LoginForm` (in `Login.js`): component for the login form
 - `ImageText` (in `ImageText.js`): component used to render a background image with the overlayed text
+- `DefaultRoute` (in `DefaultRoute.js`): component used to render the 404 GIF and the button to go back to the home page
 
 ## Screenshot
 
