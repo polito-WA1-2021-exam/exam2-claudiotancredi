@@ -14,8 +14,8 @@ const primaryColor = "#007bff";
 const hashLoaderSize = 150;
 
 const fontMapping = {
-    "font-arial": "Arial",
-    "font-courier": "Courier"
+    "font-bitter": "Bitter",
+    "font-bangers": "Bangers"
 }
 const colorMapping = {
     "color-red": "Red",
@@ -33,7 +33,7 @@ function emptyMeme(username){
         sentence2: "",
         sentence3: "",
         cssSentencesPosition: ["bottom-single-text", "", ""],
-        font: "Courier",
+        font: "Bangers",
         color: "Black",
         prot: "Protected",
         creatorName: username

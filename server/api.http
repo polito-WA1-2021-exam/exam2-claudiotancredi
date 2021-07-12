@@ -53,7 +53,7 @@ Content-Type: application/json
     "sentence1": "Text1",
     "sentence2": "",
     "sentence3": "",
-    "cssFontClass":"font-courier",
+    "cssFontClass":"font-bangers",
     "cssColourClass":"color-white",
     "prot": true
 }

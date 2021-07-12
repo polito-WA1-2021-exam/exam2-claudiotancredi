@@ -58,8 +58,8 @@ function MemeForm(props) {
                 <Form.Group as={Col} xs="5" controlId="fontForm">
                     <Form.Label>Set font</Form.Label>
                     <Form.Control className={"font-" + props.font.toLowerCase()} as="select" value={props.font} onChange={(event) => props.setFont(event.target.value)}>
-                        <option className="font-courier">Courier</option>
-                        <option className="font-arial">Arial</option>
+                        <option className="font-bangers">Bangers</option>
+                        <option className="font-bitter">Bitter</option>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group as={Col} xs="7" controlId="colorForm">
@@ -110,7 +110,7 @@ function ModalCreate(props) {
 
     const resetStates = (image) => {
         setTitle("");
-        setFont("Courier");
+        setFont("Bangers");
         setColor("Black");
         setSentence1("");
         setSentence2("");
