@@ -40,7 +40,7 @@ X-Powered-By: Express
 Content-Type: application/json; charset=utf-8
 Content-Length: 64
 ETag: W/"40-RfLBBjlikySea9MswU6E+/y3RXM"
-Set-Cookie: connect.sid=s%3Ahq9PiGc7k7ZfiZcvIBxxk40qs_XxhqPg.OjtI6RRtgBU70ntf3h%2BsfNEp%2F%2FYh3Hx6oghX7m8%2Fd3k; Path=/; HttpOnly
+Set-Cookie: connect.sid=s%3Ahq9PiGc7k7ZfiZcvIBxxk40qs_XxhqPg.OjtI6RRtgBU70ntf3h%2BsfNEp%2F%2FYh3Hx6oghX7m8%2Fd3k; Path=/; HttpOnly; SameSite=Strict
 Date: Sun, 11 Jul 2021 05:22:44 GMT
 Connection: close
 

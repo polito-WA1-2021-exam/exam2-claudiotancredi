@@ -75,7 +75,10 @@ app.use(session({
     //a secret sentence not to share with anybody and anywhere, used to sign the session ID cookie
     secret: '0Ws0TQxSueD0eFNepQgrsE1j5RMU68xB89wOkgANHGAS4RwomWhYiX031QmrOqqT5B8GJ8nPmVHusvDuxVyWp1zZmTL$EdWqP2e4htDjDZabw0YOrAaam6w0pt7LkZcL',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        sameSite: 'strict'
+    }
 }));
 
 // then, init passport
@@ -152,8 +155,8 @@ app.post('/api/memes', isLoggedIn, async (req, res) => {
         //Important must be a boolean
         body('imageId').isInt().withMessage("Must be an integer").run(req),
         body(['sentence1', 'sentence2', 'sentence3']).custom(() => {
-            if (typeof(req.body.sentence1)==='string' && typeof(req.body.sentence2)==='string' && typeof(req.body.sentence3)==='string' &&
-            (req.body.sentence1!=="" || req.body.sentence2!=="" || req.body.sentence3!==""))
+            if (typeof (req.body.sentence1) === 'string' && typeof (req.body.sentence2) === 'string' && typeof (req.body.sentence3) === 'string' &&
+                (req.body.sentence1 !== "" || req.body.sentence2 !== "" || req.body.sentence3 !== ""))
                 return true;
             else
                 return false;
