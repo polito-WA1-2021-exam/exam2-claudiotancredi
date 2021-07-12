@@ -194,7 +194,8 @@ classes about the position (bottom-single-text, etc.) */
   transform    : translate(-50%, -50%);
 }
 
-.goback-button-position{
+/*Position for the go to home page button (when the URL is wrong)*/
+.goback-button-position {
   margin       : 0;
   position     : absolute;
   top          : 80%;

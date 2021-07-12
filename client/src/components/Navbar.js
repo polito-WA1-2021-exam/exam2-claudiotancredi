@@ -22,7 +22,15 @@ function ProfileIcon(props) {
                 {props.username}{' '}
                 {props.loggedIn ? <Image src={profileIcon} width={30} height={30} /> : <></>}
             </Navbar.Brand>
-            <Button className="log-button " size="md" variant="link outline-light" as="title" onClick={() => props.loggedIn ? props.doLogOut() : props.setGoToLogin(true)}>
+            <Button className="log-button " size="md" variant="link outline-light" as="title" onClick={() => {
+                if (props.loggedIn) {
+                    props.doLogOut();
+                }
+                else {
+                    props.setGoToLogin(true);
+                    props.setGoToIndex(false);
+                }
+            }}>
                 {props.loggedIn ? "Logout" : "Login"}
             </Button>
         </Row>
@@ -36,7 +44,7 @@ function NavBar(props) {
 
             <Logo />
 
-            <ProfileIcon username={props.username} loggedIn={props.loggedIn} doLogOut={props.doLogOut} setGoToLogin={props.setGoToLogin} />
+            <ProfileIcon username={props.username} loggedIn={props.loggedIn} doLogOut={props.doLogOut} setGoToLogin={props.setGoToLogin} setGoToIndex={props.setGoToIndex} />
 
         </Navbar>
     )

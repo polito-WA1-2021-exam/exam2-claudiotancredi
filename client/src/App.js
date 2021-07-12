@@ -3,7 +3,7 @@ import './mycss/custom.css';
 //import bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import react-bootstrap components
-import { Container} from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 //imports needed to use state
 import React, { useState, useEffect } from 'react';
 //import my components
@@ -84,6 +84,7 @@ function App() {
       setUserId(user.id)
       setMemeList([]);
       setGoToLogin(false);
+      setGoToIndex(true);
       setLoggedIn(true);
       setMessage('');
     } catch (err) {
@@ -113,7 +114,7 @@ function App() {
       <Container fluid>
 
         {loggedIn === true ? (<NavBar username={userName} loggedIn={loggedIn} doLogOut={doLogOut} />) : <></>}
-        {loggedIn === false ? (<NavBar username={userName} loggedIn={loggedIn} setGoToLogin={setGoToLogin} />) : <></>}
+        {loggedIn === false ? (<NavBar username={userName} loggedIn={loggedIn} setGoToLogin={setGoToLogin} setGoToIndex={setGoToIndex} />) : <></>}
 
         {goToLogin && <Redirect to="/login" />}
         {goToIndex && <Redirect to="/" />}
@@ -122,8 +123,7 @@ function App() {
 
           <Route exact path="/login" render={() =>
             <>
-              {loggedIn === true ? <Redirect to="/" /> : <></>}
-              {loggedIn === false ? <LoginForm setLoading={setLoading} login={doLogIn} message={message} setMessage={setMessage} setGoToLogin={setGoToLogin} setDirty={setDirty} /> : <></>}
+              {loggedIn === false ? <LoginForm setLoading={setLoading} login={doLogIn} message={message} setMessage={setMessage} setGoToLogin={setGoToLogin} setDirty={setDirty} setGoToIndex={setGoToIndex} /> : <></>}
             </>} />
 
           <Route exact path="/" render={() =>
