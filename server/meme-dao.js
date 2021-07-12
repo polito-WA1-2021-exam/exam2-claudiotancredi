@@ -42,7 +42,6 @@ exports.retrieveOnlyPublic = () => {
  * @returns a promise that will resolve
  */
 exports.deleteByID = (id, user) => {
-    console.log(typeof (id), typeof (user))
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM memes WHERE id = ? AND user = ?';
         db.run(sql, [id, user], function (err) {
